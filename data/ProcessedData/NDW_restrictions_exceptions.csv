@@ -1,0 +1,43 @@
+zone_name,restrictions,exceptions
+LEZ 's-Hertogenbosch,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Dordrecht,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Delft,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE zone Alphen aan den Rijn,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Haarlem,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Haarlemmermeer,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Zwolle,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Ede,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Gouda,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Amersfoort 2027,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Enschede,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Haarlem,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Arnhem,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Zone,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE 's-Hertogenbosch,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+onbekend,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Amsterdam,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Den Haag,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Den Haag,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Breda,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Rotterdam,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Tilburg,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+LEZ Utrecht,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Tilburg,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+Milieuzone Amsterdam,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Leiden,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Amersfoort 2025,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Leiden,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Assen,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Den Haag Kust,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Groningen,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Delft,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+LEZ Rijswijk,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZES Maastricht,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Utrecht,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+Milieuzone Arnhem,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+LEZ Amsterdam,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Nijmegen,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+ZE Deventer,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
+Milieuzone Maastricht,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+LEZ Rotterdam Maasvlakte,"['Access restriction: noEntry', 'Restricted: fuel=diesel type=anyVehicle']",[]
+ZE Apeldoorn,['Access restriction: noEntry'],"['Fuel exemption: battery', 'Fuel exemption: hydrogen']"
