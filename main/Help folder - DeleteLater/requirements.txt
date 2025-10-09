@@ -1,0 +1,3 @@
+## hier moeten alle libraries komen die geinstalleerd moeten worden door docker zodat alles in flask werkt 
+flask==2.0.1
+requests==2.25.1
