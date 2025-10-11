@@ -46,27 +46,36 @@ for base_url in urls:
     file_name = year + csv_suffix
     full_url = base_url + file_name 
     
-    print("Bezig met verwerken: {}".format(file_name)) 
-
-
-    temp_df = pd.read_csv(full_url, index_col = 0, skiprows=5, sep=';')
+   
+    temp_df = pd.read_csv(
+        full_url, 
+        sep=';', 
+        skiprows=5 
+    )
     
-    gemiddelde = temp_df['waarde'].mean()
-    gemiddelden_per_bestand[file_name] = gemiddelde
-    
-    main_df = pd.concat([main_df, temp_df], ignore_index=True)
-    
-if 'opm_code' in main_df.columns:
-    main_df.drop(columns=['opm_code'], inplace=True)
+    all_dfs.append(temp_df)
+    print(f"loaded: {file_name}")
 
-resultaten_df = pd.DataFrame( list(gemiddelden_per_bestand.items()),
-columns=['Bestand (Jaar)', 'Gemiddelde NO2 Waarde']
-)
+#Combine data into one dataframe
+main_df = pd.concat(all_dfs, ignore_index=True)
 
-resultaten_df["Jaar"] = resultaten_df["Bestand (Jaar)"].str.split('_').str[0]
+# convert date to  datetime
+main_df['begindatumtijd'] = pd.to_datetime(main_df['begindatumtijd'], errors='coerce')
 
-resultaten_df = resultaten_df.drop(columns=["Bestand (Jaar)"])
+# Make a new column for Year-Month 
+main_df['Jaar_Maand'] = main_df['begindatumtijd'].dt.to_period('M')
 
-resultaten_df = resultaten_df[['Jaar', 'Gemiddelde NO2 Waarde']]
+# Group by the new Year_Month column and calculate the mean of 'waarde'
+monthlyaverage_df = main_df.groupby('Jaar_Maand')['waarde'].mean().reset_index()
 
-print(resultaten_df)
+# Rename the columns
+monthlyaverage_df.columns = ['Year_Month', 'Average NO2 Value']
+
+# Format year and month column for better display
+monthlyaverage_df['Year_Month'] = monthlyaverage_df['Year_Month'].astype(str)
+monthlyaverage_df['Average NO2 Value'] = monthlyaverage_df['Average NO2 Value'].round(0).astype(int)
+
+
+print(monthlyaverage_df)
+output_filename = 'mean_no2_monthlyvalues.csv'
+monthlyaverage_df.to_csv(output_filename, index=False, sep=',')
