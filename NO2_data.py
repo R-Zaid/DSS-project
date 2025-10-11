@@ -21,6 +21,7 @@
 
 #print(resultaten_df)
 import pandas as pd
+import numpy as np
 
 urls = [
     'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/1990/', 
@@ -35,14 +36,12 @@ urls = [
     'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2024/',
 ]
 csv_suffix = '_NO2.csv' 
-main_df = pd.DataFrame()
-gemiddelden_per_bestand = {}
+all_dfs = [] 
 
 
 for base_url in urls:
     
     year = base_url.split('/')[-2]
-    
     file_name = year + csv_suffix
     full_url = base_url + file_name 
     
@@ -56,7 +55,7 @@ for base_url in urls:
     all_dfs.append(temp_df)
     print(f"loaded: {file_name}")
 
-#Combine data into one dataframe
+#Combine data into one df
 main_df = pd.concat(all_dfs, ignore_index=True)
 
 # convert date to  datetime
