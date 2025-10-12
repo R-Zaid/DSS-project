@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polution Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the DSS Dashboard</h1>
+
+    
+    <br>
+    <a href="/map">View Map</a>
+    <br>
+
+    <div id="bar_NO2_chart">{{ bar_NO2_clean|safe }}</div>
+    <div id="bar_NO2_province_chart">{{ bar_NO2_province|safe }}</div>
+    
+    <canvas id="myChart" width="400" height="200"></canvas>
+</body>
+
+
+    <link rel="stylesheet" href="../style/style.css">
+</html>

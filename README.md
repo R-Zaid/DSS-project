@@ -1,4 +1,6 @@
 # DSS-project
-jikjkjk
+To run the program use the command
+docker-compose up -d
 
-Test change
+and go the the page in your browser
+http://localhost:8080
