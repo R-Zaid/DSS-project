@@ -31,7 +31,7 @@ This deliverable contains the following folders:
     
 
 
-2. Preprocessors - Contains all the preprocessed data explaining showing how the data is collected and prepared:
+2. Preprocessors - Contains all the preprocessed data explaining and showing how the data is collected and prepared:
     
     1.  DSS group 1 merge.jpynb - In this file we analyzed, transformed and preprocessed the api data from the following 4 APIs:
         * Vehicle api: "https://opendata.cbs.nl/ODataApi/odata/85235NED/TypedDataSet"
@@ -39,7 +39,7 @@ This deliverable contains the following folders:
         * PM2.5 api: "https://api.luchtmeetnet.nl/open_api/measurements?formula=PM25"
         * PM10 api: "https://api.luchtmeetnet.nl/open_api/measurements?formula=PM10"
 
-        The last three APIs are frequently updated (once every hour).
+        The last three APIs are frequently updated (once every hour). This file comprehensively explained how we preprocessed each api. For the pollution api we cleaned and transformed the datasets. Subsequently, we made visualization where we visualized each stations and regions alongside their measured pollution value. Also, this file contains visualization which are created to help us understand the dataset. Each part of the file contains an explanation regarding our preprocess approaches. 
     
     2. Map_No2.jpynb - This file focuses on creating the map of the netherlands for the first deliverable. However it still needs to be merged with the DSS group 1 merge.ipnby
     
