@@ -18,7 +18,17 @@ Dataset:
 Other Links: NA
 
 This deliverable contains the following folders:
-1. Dashboard
+1. Dashboard - 
+    1. pychache -
+    2. preprocessors -
+        1. CBSPreprocessor.ipynb -
+        2. georef-netherlands-provincie.geojson -
+        3. georef-netherlands-provincie.geojson -
+    3. src -
+        1. html -
+            * dashboard.html -
+            * index.html -
+    
 
 
 2. Preprocessors - Contains all the preprocessed data explaining showing how the data is collected and prepared:
@@ -31,7 +41,7 @@ This deliverable contains the following folders:
 
         The last three APIs are frequently updated (once every hour).
     
-    2. Map_No2.jpynb
+    2. Map_No2.jpynb - This file focuses on creating the map of the netherlands for the first deliverable. However it still needs to be merged with the DSS group 1 merge.ipnby
     
     3. NO2_dataset.jpynb - Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
        * Data Sources: RIVM luchtmeetnet  
