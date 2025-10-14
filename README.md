@@ -26,8 +26,19 @@ DSS group 1 wwww.jpynb
 Map_No2.jpynb
     
 NO2_dataset.jpynb
-
+Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
 Data Sources:
+1. RIVM luchtmeetnet    
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/1990/', 
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2016/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2017/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2018/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2019/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2020/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2021/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2022/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2023/',
+'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2024/
 
 
 Existing Indicators and Visualizations:
