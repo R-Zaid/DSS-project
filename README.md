@@ -68,10 +68,13 @@ This deliverable contains the following folders:
 3. Existing Indicators and Visualizations:
     1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024
        * CSF: Predict emissions per region in 2030 scenarios of low emission zones
+       * KPI: Line chart visualizes NO₂, PM₂.₅, and PM₁₀ emission trends over time to support scenario analysis.
     2. Visualization maps.jpynb: maps with LEZ locations and provinces division
        * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
+       * KPI: Hourly API data ensures accurate national air quality updates and displays the AQI scale in a clear, color-coded format.
     3. Visalisation NO₂ value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”).
        * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
+       * KPI: Hourly API data ensures accurate national air quality updates and displays the AQI scale in a clear, color-coded format.
 
 
 Data sources:
