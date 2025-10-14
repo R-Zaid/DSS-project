@@ -14,7 +14,8 @@ def draw_monthly_no2_average():
         csv_path = os.path.normpath(csv_path)
     
     df_NO2 = pd.read_csv(csv_path)
-    
+    df_NO2 = df_NO2.iloc[12:]
+
     # Create the line plot
     fig = px.line(df_NO2, x='Year_Month', y='Average NO2 Value', 
                     title='Monthly National Average NO2 Levels')
