@@ -41,7 +41,7 @@ This deliverable contains the following folders:
 
         The last three APIs are frequently updated (once every hour). This file comprehensively explained how we preprocessed each api. For the pollution api we cleaned and transformed the datasets. Subsequently, we made visualization where we visualized each stations and regions alongside their measured pollution value. Also, this file contains visualization which are created to help us understand the dataset. Each part of the file contains an explanation regarding our preprocess approaches. 
     
-    2. Map_No2.jpynb - This file focuses on creating the map of the netherlands for the first deliverable. However it still needs to be merged with the DSS group 1 merge.ipnby
+    2. Map_No2.jpynb - This file focuses on creating the map of the netherlands for the first deliverable. However it still needs to be merged with the DSS group 1 merge.ipnby (adddd)
     
     3. NO2_dataset.jpynb - Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
        * Data Sources: RIVM luchtmeetnet  
