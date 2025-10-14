@@ -41,9 +41,9 @@ This deliverable contains the following folders:
 
         The last three APIs are frequently updated (once every hour). This file comprehensively explained how we preprocessed each api. For the pollution api we cleaned and transformed the datasets. Subsequently, we made visualizations where we visualized each stations and regions alongside their measured pollution value. Also, this file contains visualizations which are created to help us understand the dataset. Furthermore, each part of the file contains an explanation regarding our preprocess approaches. 
     
-    2. Map_No2.jpynb - This file focuses on creating the map of the netherlands for the first deliverable. However it still needs to be merged with the DSS group 1 merge.ipnby (adddd)
+
     
-    3. NO2_dataset.jpynb - Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
+    2. NO2_dataset.jpynb - Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
        * Data Sources: RIVM luchtmeetnet  
             'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/1990/', 
             'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2016/',
@@ -58,11 +58,11 @@ This deliverable contains the following folders:
 
 
 3. Existing Indicators and Visualizations:
-    1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024
+    1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024 - visualization of historical NO₂ emission values from 2016 to 2024 using a line chart to show the NO_2 changes over time.
        * CSF: Predict emissions per region in 2030 scenarios of low emission zones
-    2. Visualization maps.jpynb: maps with LEZ locations and provinces division
+    2. Visualization maps.jpynb: maps with LEZ locations and provinces division - includes  map of the Netherlands displaying        provincial divisions and Low Emission Zone (LEZ) markers.
        * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
-    3. Visalisation NO₂ value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”).
+    3. Visalisation NO₂ value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”). - interactive Folium map showing AQI color-coded provinces.
        * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
 
 
