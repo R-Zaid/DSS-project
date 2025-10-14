@@ -19,9 +19,13 @@ Other Links: NA
 
 Data Collection and Preparation:
     
-DSS group 1 merge.jpynb
-    
-DSS group 1 wwww.jpynb
+DSS group 1 merge.jpynb - In this file we analyzed, transformed and preprocessed the api data from the following 4 APIs:
+- Vehicle api: "https://opendata.cbs.nl/ODataApi/odata/85235NED/TypedDataSet"
+- NO2 api: "https://api.luchtmeetnet.nl/open_api/measurements?formula=NO2"
+- PM2.5 api: "https://api.luchtmeetnet.nl/open_api/measurements?formula=PM25"
+- PM10 api: "https://api.luchtmeetnet.nl/open_api/measurements?formula=PM10"
+
+The last three APIs are frequently updated (once every hour).
     
 Map_No2.jpynb
     
