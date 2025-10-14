@@ -59,5 +59,15 @@ This deliverable contains the following folders:
 
 3. Existing Indicators and Visualizations:
     1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024
+       * CSF: Predict emissions per region in 2030 scenarios of low emission zones
     2. Visualization maps.jpynb: maps with LEZ locations and provinces division
+       * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
     3. Visalisation NO₂ value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”).
+       * CSF: Air pollution rates NO₂, PM₂.₅, PM₁₀, (µg/m³) per province
+
+
+Data sources:
+    
+* georef-netherlands-provincie.geojson, georef-netherlands-provincie.geojson: 
+    https://public.opendatasoft.com/explore/assets/georef-netherlands-provincie/export/
+
