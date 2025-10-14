@@ -27,6 +27,7 @@ Map_No2.jpynb
     
 NO2_dataset.jpynb
 Adds the monthly mean value for the descriptive part of the dashboard. This file will also be used to predict the NO2 values.
+
 Data Sources:
 1. RIVM luchtmeetnet    
 'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/1990/', 
@@ -45,4 +46,4 @@ Existing Indicators and Visualizations:
     
 1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024
 2. Visualization maps.jpynb: maps with LEZ locations and provinces division
-
+3. Visalisation NO₂ value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”).
