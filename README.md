@@ -73,4 +73,5 @@ Data sources:
     
 * georef-netherlands-provincie.geojson, georef-netherlands-provincie.geojson: 
     https://public.opendatasoft.com/explore/assets/georef-netherlands-provincie/export/
-
+* Luchtmeetnet API  provides hourly NO₂, PM₂.₅, and PM₁₀ data. https://api-docs.luchtmeetnet.nl/
+* EEA Air Quality Index –defines the AQI thresholds and color scale used in the visualization. https://airindex.eea.europa.eu/AQI/index.html
