@@ -10,13 +10,19 @@ nav {
   box-shadow: 0 2px 4px black;
   border-radius: 5px;
 }
-
-
-#cbs-dashboard-map-regionaal {
-  display:inline-block;
-  width:25%;
-  height: auto;
+nav a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
 }
+nav a:hover {
+  background-color: lightgrey;
+  color: black;
+}
+
 
 
 

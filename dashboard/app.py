@@ -3,6 +3,7 @@ import plotly.express as px
 from flask import Flask, render_template_string, render_template, send_from_directory, send_file
 from sqlalchemy import create_engine, text, inspect, Table
 import os
+from src.scripts.NO2_map import draw_no2_map
 from src.scripts.LEZ_map import draw_LEZ_map
 from src.scripts.NO2_past_value import draw_monthly_no2_average
 from src.scripts.NO2_API import draw_measures_chart, draw_NO2_province_chart, draw_NO2_chart
@@ -47,7 +48,7 @@ def test_db():
 def map_view():
     # render the dashboard.tsx file (serve it as a static file for development)
 
-    return render_template('dashboard.html') 
+    return render_template('dashboard.html', no2_map=draw_no2_map()) 
 
 
 

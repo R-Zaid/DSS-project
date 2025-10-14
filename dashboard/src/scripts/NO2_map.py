@@ -3,17 +3,12 @@ import os
 import math
 import folium
 from folium import plugins
-import rioxarray as rxr
-import earthpy as et
-import earthpy.spatial as es
 import pandas as pd
 import geopandas as gpd
 import numpy as np
+import requests
 from branca.element import Template, MacroElement
-
-data = et.data.get_data('colorado-flood') # Importing geograhpcal data EarthPy
-
-os.chdir(os.path.join(et.io.HOME, 'earth-analytics', 'data')) # working directory -> earth-analytics
+import requests
 
 AQI_NO2 = {
     (0, 10):           ("Good",           "green"),
@@ -45,15 +40,22 @@ def norm_prov(p):                           # to allign province naam (Fryslân 
     return {"Fryslân": "Friesland"}.get(p, p)
 
 # so no overlap in province name 
-def load_geodata(geojson_path: str, json_path: str) -> pd.DataFrame: 
-    gdf = pd.read_json(geojson_path)
-    df  = pd.read_json(json_path)
+def load_geodata(geojson_path: str, json_path: str) -> gpd.GeoDataFrame: 
+    gdf = gpd.read_file(geojson_path)
+    df  = pd.read_json(json_path) 
    
     gdf['prov_name'] = df['prov_name']     
     gdf['province']  = gdf['prov_name'].apply(norm_prov)
     return gdf
 
 
+def get_no2_mean():
+    # simulate data
+    return pd.DataFrame({
+        "RegioS": ["Groningen", "Friesland", "Drenthe", "Overijssel", "Flevoland", "Gelderland", "Utrecht", "Noord-Holland", "Zuid-Holland", "Zeeland", "Noord-Brabant", "Limburg"],
+        "value": [15, 20, 18, 30, 25, 35, 40, 50, 55, 22, 45, 60]
+    })
+   
 
 def attach_no2_mean(gdf: pd.DataFrame, meanprovince: pd.DataFrame) -> pd.DataFrame: 
     mp = meanprovince.copy() # so province matches  meanprovince -
@@ -82,10 +84,14 @@ def legenda(m, bins=AQI_NO2, title="Air Quality (NO₂)", unit="µg/m³"):
 
 def build_map(gdf: pd.DataFrame, center_lat: float = 52.2, center_lon: float = 5.3) -> folium.Map:
     #map
+    # Get NO2 data and attach it to the GeoDataFrame before creating the map
+    meanprovince = get_no2_mean()  # Fetch mean NO2 values
+    gdf = attach_no2_mean(gdf, meanprovince)  # Attach mean NO2 values to the GeoDataFrame
+    
     m = folium.Map(location=[center_lat, center_lon], zoom_start=7, tiles="CartoDB Positron")
     for _, row in gdf.iterrows():
         prov = row["province"]
-        geometry = row["features"]["geometry"]
+        geometry = row["geometry"]  # Use 'geometry' directly from GeoDataFrame
         mean_no2 = row.get("NO2_mean")
         color = no2_colour_pollution(mean_no2)
         folium.GeoJson(
@@ -98,26 +104,34 @@ def build_map(gdf: pd.DataFrame, center_lat: float = 52.2, center_lon: float = 5
             },
             name=prov,
             tooltip=folium.Tooltip(
-                f"{prov}<br>NO₂ (mean): {mean_no2:.2f}" if pd.notna(mean_no2) else f"{prov}<br>NO₂: n.v.t."
+                f"{prov}<br>NO₂ (mean): {mean_no2:.2f} µg/m³" if pd.notna(mean_no2) else f"{prov}<br>NO₂: n.v.t."
             ),
         ).add_to(m)
     folium.LayerControl().add_to(m)
+
     return m
 
-
-if __name__ == "__main__":
-    geojson_path = '/Users/fakram/anaconda3/DSS/DSS!/main/Preprocessors/georef-netherlands-provincie.geojson'
-    json_path    = '/Users/fakram/anaconda3/DSS/DSS!/main/Preprocessors/georef-netherlands-provincie.json'
-    gdf = load_geodata(geojson_path, json_path)
-
+def draw_no2_map():
+    # In Docker, data is mounted at /data, otherwise use relative path
+    if os.path.exists("/data"):
+        data_dir = "/data/processedData"
+    else:
+        # Fallback for local development
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_dir = os.path.join(script_dir, "..", "..", "..", "data", "processedData")
+        data_dir = os.path.normpath(data_dir)
     
-    province_data = gdf[['prov_name', 'features']].copy() # privinces and features
+    geojson_path = os.path.join(data_dir, "georef-netherlands-provincie.geojson")
+    json_path = os.path.join(data_dir, "georef-netherlands-provincie.json")
+    
+    gdf = load_geodata(geojson_path, json_path)
+    
+    province_data = gdf[['prov_name', 'geometry']].copy() # provinces and geometry
     print(province_data)
 
-   
     m = build_map(gdf, center_lat=52.2, center_lon=5.3)  #folium map nl 
     legenda(m)
     
-    m.save("no2_map.html")
+    return m._repr_html_()
 
 
