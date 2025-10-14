@@ -19,16 +19,24 @@ Other Links: NA
 
 This deliverable contains the following folders:
 1. Dashboard - 
-    1. pychache -
-    2. preprocessors -
+    1. preprocessors -
         1. CBSPreprocessor.ipynb -
         2. georef-netherlands-provincie.geojson -
         3. georef-netherlands-provincie.geojson -
-    3. src -
+    2. src -
         1. html -
-            * dashboard.html -
-            * index.html -
+            * dashboard.html - the html file for the most important graphic that we have, the no2 map.
+            * index.html - a home page for the data that we have gathered.
+        2. scripts -
+            * LEZ_map - creates the map for the emission zone locations.
+            * NO2 api - creates the mean NO2 and mean NO2 per province. Has already preparations for the other two substances we are going to display. 
+            * NO2_map - creates the map for the NO2 means in the dashboard.html. For now has mock data, but this will change in the final project.
+            * NO2_past_value - uses parts of our databank to display the mean values of that year. 
+        3. style - contains style our css file for the website
     
+    3. app.py - This file creates the backend of our website using flask. We have diverted from the standard flask layout as the standard express layout is more logical. 
+    4. dockerfile_dashboard - contains the docker for the dashboard. Looks a lot like the one from the example code.
+    5. Requirements.txt - a lot of standard data frameworks. We have already imported streamlit as we want to use this in the future for clean UI design. We use earthpy, geopandas, folium and dash for creation of better diagrams. The version specification is needed as otherwise it creates an error. 
 
 
 2. Preprocessors - Contains all the preprocessed data explaining and showing how the data is collected and prepared:
