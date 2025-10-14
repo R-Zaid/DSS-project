@@ -7,3 +7,8 @@ pulp
 country_converter
 python-gnupg
 requests
+earthpy
+folium
+streamlit
+geopandas==0.13.2
+fiona==1.8.22

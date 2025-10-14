@@ -1,9 +1,11 @@
 import pandas as pd
 import plotly.express as px
-from flask import Flask, render_template_string, render_template, send_from_directory
+from flask import Flask, render_template_string, render_template, send_from_directory, send_file
 from sqlalchemy import create_engine, text, inspect, Table
 import os
-from src.scripts.NO2_API import draw_NO2_chart, draw_NO2_province_chart
+from src.scripts.LEZ_map import draw_LEZ_map
+from src.scripts.NO2_past_value import draw_monthly_no2_average
+from src.scripts.NO2_API import draw_measures_chart, draw_NO2_province_chart, draw_NO2_chart
 
 # Get database URL from environment variable
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://student:infomdss@db_dashboard:5432/dashboard')
@@ -17,7 +19,11 @@ def start_app():
 
     print("Starting app...")
     # return web page
-    return render_template('index.html', bar_NO2_clean=draw_NO2_chart(), bar_NO2_province=draw_NO2_province_chart()) 
+    return render_template('index.html', 
+                           bar_NO2_clean=draw_NO2_chart(), 
+                           bar_NO2_province=draw_NO2_province_chart(), 
+                           netherlands_map_emissionzones=draw_LEZ_map(),
+                           monthly_NO2_average=draw_monthly_no2_average()) 
 
 @app.route('/')
 def index():
@@ -42,6 +48,8 @@ def map_view():
     # render the dashboard.tsx file (serve it as a static file for development)
 
     return render_template('dashboard.html') 
+
+
 
 
 

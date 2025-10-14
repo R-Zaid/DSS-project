@@ -4,21 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polution Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 <body>
-    <h1>Welcome to the DSS Dashboard</h1>
+    <nav>
+        <h1>Car Pollution Dashboard</h1>
+        <a href="/">Home</a> |
+        <a href="/map">Map</a> |
+        <a href="/about">About</a>
+    </nav>
 
-    
-    <br>
-    <a href="/map">View Map</a>
-    <br>
+    <div class ="regio_data">
+        <div class="netherlands_map" id="netherlands_map_emissionzones">
+            {{ netherlands_map_emissionzones|safe }}
+        </div>
+        <div class="regio_data_info" id="regio_data_info">
+            <h2>Regio Data Information</h2>
+            <p>This section provides detailed information about the selected region on the map. Click on an emission zone to see more details.</p>
+        </div>
+    </div>
 
-    <div id="bar_NO2_chart">{{ bar_NO2_clean|safe }}</div>
-    <div id="bar_NO2_province_chart">{{ bar_NO2_province|safe }}</div>
-    
+
+    <div class="bar_graphs">
+        <div class="bar_graph_stats" id="bar_NO2_chart">{{ bar_NO2_clean|safe }}</div>
+        <div class="bar_graph_stats" id="bar_NO2_province_chart">{{ bar_NO2_province|safe }}</div>
+        <div class="bar_graph_stats" id="monthly_NO2_average">{{ monthly_NO2_average|safe }}</div>
+    </div>
     <canvas id="myChart" width="400" height="200"></canvas>
 </body>
-
-
-    <link rel="stylesheet" href="../style/style.css">
 </html>

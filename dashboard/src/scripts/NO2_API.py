@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 import plotly.express as px
 
+
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Everything is done at runtime, we should preprocess !!!!!!!!!!!!!!!!!
 
 url_province = "https://api.luchtmeetnet.nl/open_api/stations"
@@ -58,17 +59,28 @@ def create_NO2_chart(data):
     bar_NO2_clean = px.bar(data, x='station_number' , y= 'value', title='Average µg/m³ NO2 per station')
     bar_NO2_clean.update_layout(yaxis_title='NO2 in µg/m³', xaxis_title= "Station numbers", barmode='group') 
     #bar.add_shape(type='line', y0=40, y1=40, xref='paper', x0=0, x1=1, line_color='red')
+    # add a horizontal threshold line inside the plot area
     bar_NO2_clean.add_shape(
-        legendrank=1,
-        showlegend=True,
         type="line",
         xref="paper",
-        line=dict(dash="5px", color='red'),
-        x0=1,
-        x1=0,
+        x0=0,
+        x1=1,
         y0=40,
         y1=40,
-        name='Threshold of 40 µg/m³'
+        line=dict(dash="5px", color='red'),
+    )
+
+    # place a label for the line inside the plot (not in the legend)
+    bar_NO2_clean.add_annotation(
+        xref='paper',
+        x=0.99,
+        y=40,
+        yref='y',
+        text='Threshold 40 µg/m³',
+        showarrow=False,
+        xanchor='right',
+        bgcolor='rgba(255,255,255,0.7)',
+        bordercolor='rgba(0,0,0,0.1)',
     )
     return bar_NO2_clean.to_html(full_html=False)
 
@@ -183,18 +195,29 @@ def create_NO2_province_chart(data):
     bar = px.bar(pv_mean, x='RegioS' , y='value', title='Average µg/m³ NO2 per Region')
     bar.update_layout(yaxis_title='NO2 in µg/m³', xaxis_title= "Provinces", barmode='group') 
     #bar.add_shape(type='line', y0=40, y1=40, xref='paper', x0=0, x1=1, line_color='red')
+    # add a horizontal threshold line inside the plot area
     bar.add_shape(
-        legendrank=1,
-        showlegend=True,
         type="line",
         xref="paper",
-        line=dict(dash="5px", color='red'),
-        x0=1,
-        x1=0,
+        x0=0,
+        x1=1,
         y0=40,
         y1=40,
-        name='Threshold of 40 µg/m³'
-)
+        line=dict(dash="5px", color='red'),
+    )
+
+    # place a label for the line inside the plot (not in the legend)
+    bar.add_annotation(
+        xref='paper',
+        x=0.99,
+        y=40,
+        yref='y',
+        text='Threshold 40 µg/m³',
+        showarrow=False,
+        xanchor='right',
+        bgcolor='rgba(255,255,255,0.7)',
+        bordercolor='rgba(0,0,0,0.1)',
+    )
     return bar.to_html(full_html=False)
 
 def draw_NO2_province_chart():
@@ -204,3 +227,29 @@ def draw_NO2_province_chart():
     bar_NO2_province_html = create_NO2_province_chart(clean_NO2_province_data)
     print("NO2 province chart created")
     return bar_NO2_province_html
+
+
+# =======================================================================================
+# ---------------------------------------------------------------------------------------
+# -------------------------- Draw everything ---------------------------------------------
+# ---------------------------------------------------------------------------------------
+# =======================================================================================
+
+
+
+
+
+def draw_measures_chart():
+    dfposts_NO2 = luchtmeetnet_api_fetch_data('NO2')
+    # dfposts_PM10 = luchtmeetnet_api_fetch_data('PM10')
+    # dfposts_PM25 = luchtmeetnet_api_fetch_data('PM2.5')
+
+    meanlocation_clean = clean_NO2_data(dfposts_NO2)
+    bar_NO2_clean_html = create_NO2_chart(meanlocation_clean)
+
+
+
+
+
+    print("Measures chart created")
+    return bar_NO2_clean_html

@@ -1,0 +1,95 @@
+body{
+  background-color: lightseagreen;
+}
+
+nav {
+  background-color:rgb(167, 244, 167);
+  overflow: hidden;
+  padding: 10px;
+  margin-bottom: 2px;
+  box-shadow: 0 2px 4px black;
+  border-radius: 5px;
+}
+
+
+#cbs-dashboard-map-regionaal {
+  display:inline-block;
+  width:25%;
+  height: auto;
+}
+
+
+
+.bar_graphs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto;
+  margin-right: 20px;
+  padding: 10px;
+  background-color: darkgrey;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.bar_graph_stats {
+  flex: 1;
+  min-width: 300px;
+  max-width: 32%;
+  height: 500px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px black;
+  overflow: hidden;
+}
+
+/* Target the plotly graphs specifically to ensure consistent sizing */
+.bar_graph_stats .plotly-graph-div {
+  width: 100% !important;
+  height: 450px !important;
+}
+
+/* Target any div inside bar_graph_stats to ensure consistent sizing */
+.bar_graph_stats > div {
+  width: 100% !important;
+  height: 450px !important;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+
+.regio_data {
+  width: 100%;
+  height: auto;
+  background-color: darkgrey;
+  display: flex;
+  align-items: flex-start;
+  gap: 2%;
+  padding: 2%;
+}
+
+/* Netherlands map styling */
+.netherlands_map {
+  flex: 1;
+  max-width: 55%;
+  height: 100%;
+  
+  box-shadow: 0 2px 4px black;
+}
+
+.regio_data_info {
+  flex: 1;
+  max-width: 30%;
+  height: 100%;
+  background-color: lightgrey;
+  padding: 5%;
+  border-radius: 5%;
+}
+
+
