@@ -6,8 +6,11 @@ import geopandas as gpd
 
 def draw_LEZ_map_new():
     LEZ_location = pd.read_csv(r"..\..\data\ProcessedData\NDW_locations.csv")
+    # Remove Zero Emission zones
     LEZ_location = LEZ_location[LEZ_location['zone_name'].str.startswith('ZE') == False].reset_index(drop=True)
+    # Remove not used area from Amsterdam
     LEZ_location = LEZ_location[LEZ_location['zone_name'] != "Milieuzone Amsterdam"].reset_index(drop=True)
+    # Manually adjust some missing or wrong values
     LEZ_location.loc[3, 'zone_name'] = 'LEZ Apeldoorn'
     LEZ_location.loc[10, 'end_date'] = '2999-01-01T00:00:00Z'
 
@@ -27,8 +30,10 @@ def draw_LEZ_map_new():
     df['LAT'] = df['latlon_pairs'].apply(lambda x: [lat for lon, lat in x])
     df['LON'] = df['latlon_pairs'].apply(lambda x: [lon for lon, lat in x])
 
+    # Creating pairs of lat and lon
     geom_list = [(x, y) for x, y in zip(df['LON'], df['LAT'])]
 
+    # Creating the polygons
     geom_list_2 = [Polygon(tuple(zip(x, y))) for x, y in geom_list]
 
     polygon_gdf = gpd.GeoDataFrame(geometry=geom_list_2)
@@ -37,12 +42,14 @@ def draw_LEZ_map_new():
     polygon_gdf = polygon_gdf.set_crs(epsg=4326)
     gdf = polygon_gdf.to_crs(epsg=3857)
 
+    # Getting the area of every LEZ
     LEZ_location['area_m2'] = gdf.area
     LEZ_location['area_km2'] = LEZ_location['area_m2'] / 1000000
 
     selected_columns = ['zone_name', 'start_date', 'end_date', 'area_km2']
     LEZ_area = LEZ_location[selected_columns].copy()
 
+    # Assigning every LEZ to the right province
     province_map = {"LEZ 's-Hertogenbosch": 'North-Brabant',
                     'LEZ Delft': 'Zuid-Holland',
                     'LEZ Haarlem': 'Noord-Holland',
@@ -60,6 +67,8 @@ def draw_LEZ_map_new():
                     }
     LEZ_area['province'] = LEZ_area['zone_name'].map(province_map)
 
+
+    # Creating the map
     center_lat = 52.2
     center_lon = 5.3
 
