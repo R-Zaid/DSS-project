@@ -86,8 +86,8 @@ def create_NO2_chart(data):
 
 
 # Function to fetch, clean, and create the NO2 chart
-def draw_NO2_chart():
-    dfposts_NO2 = luchtmeetnet_api_fetch_data('NO2')
+def draw_api_chart(measure):
+    dfposts_NO2 = luchtmeetnet_api_fetch_data(measure)
     meanlocation_clean = clean_NO2_data(dfposts_NO2)
     bar_NO2_clean_html = create_NO2_chart(meanlocation_clean)
     print("NO2 chart created")
@@ -236,20 +236,15 @@ def draw_NO2_province_chart():
 # =======================================================================================
 
 
-
+def get_data_from_api(measure):
+    dfposts = luchtmeetnet_api_fetch_data(measure)
+    return dfposts
 
 
 def draw_measures_chart():
+    # Default to NO2 measurement
     dfposts_NO2 = luchtmeetnet_api_fetch_data('NO2')
-    # dfposts_PM10 = luchtmeetnet_api_fetch_data('PM10')
-    # dfposts_PM25 = luchtmeetnet_api_fetch_data('PM2.5')
-
     meanlocation_clean = clean_NO2_data(dfposts_NO2)
     bar_NO2_clean_html = create_NO2_chart(meanlocation_clean)
-
-
-
-
-
     print("Measures chart created")
     return bar_NO2_clean_html

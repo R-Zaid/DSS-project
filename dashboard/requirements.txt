@@ -10,6 +10,7 @@ requests
 earthpy
 folium
 streamlit
+streamlit_folium
 geopandas==0.13.2
 fiona==1.8.22
 Dash

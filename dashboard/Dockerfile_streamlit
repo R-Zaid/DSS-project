@@ -1,0 +1,42 @@
+# Use an official Python runtime as a parent image
+FROM python:3.8
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy only requirements first to leverage Docker layer caching
+COPY ./dashboard/requirements.txt /app/requirements.txt
+
+# Install OS-level dependencies required by geospatial Python packages
+# (GDAL/PROJ/GEOS and build tools). This helps pip install fiona, geopandas, etc.
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+	   build-essential \
+	   gcc \
+	   gdal-bin \
+	   libgdal-dev \
+	   proj-bin \
+	   libproj-dev \
+	   libgeos-dev \
+	   libspatialindex-dev \
+	   libsqlite3-dev \
+	   libxml2-dev \
+	   libpq-dev \
+	   ca-certificates \
+	&& rm -rf /var/lib/apt/lists/* \
+	# Upgrade pip and install Python dependencies (includes streamlit)
+	&& pip install --upgrade pip \
+	&& pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy the rest of the dashboard code
+COPY ./dashboard /app
+
+# Streamlit default port is 8501; expose that and match docker-compose
+EXPOSE 8501
+
+# Define the streamlit app file (kept for clarity)
+ENV STREAMLIT_APP=dashboard.py
+
+# Run the Streamlit app. Use explicit filename and server flags so
+# we don't rely on a shell or PATH lookup that may differ across images.
+CMD ["streamlit", "run", "dashboard.py", "--server.port", "8501", "--server.address", "0.0.0.0"]

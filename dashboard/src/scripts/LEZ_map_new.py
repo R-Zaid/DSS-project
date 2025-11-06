@@ -3,9 +3,31 @@ import pandas as pd
 import re
 from shapely.geometry import Polygon
 import geopandas as gpd
+import os
 
 def draw_LEZ_map_new():
-    LEZ_location = pd.read_csv(r"..\..\data\ProcessedData\NDW_locations.csv")
+    # Resolve data directory: prefer mounted /data in Docker, otherwise repo-relative path
+    if os.path.exists("/data"):
+        # support both lowercase and capitalized folder names
+        if os.path.exists(os.path.join("/data", "processedData")):
+            data_dir = os.path.join("/data", "processedData")
+        else:
+            data_dir = os.path.join("/data", "ProcessedData")
+    else:
+        # Fallback for local development (relative to this script)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # try both common locations
+        candidate1 = os.path.normpath(os.path.join(script_dir, "..", "..", "data", "processedData"))
+        candidate2 = os.path.normpath(os.path.join(script_dir, "..", "..", "data", "ProcessedData"))
+        if os.path.exists(candidate1):
+            data_dir = candidate1
+        else:
+            data_dir = candidate2
+
+    ndw_csv = os.path.join(data_dir, "NDW_locations.csv")
+    if not os.path.exists(ndw_csv):
+        raise FileNotFoundError(f"NDW_locations.csv not found at {ndw_csv}. Checked /data and repo data folders.")
+    LEZ_location = pd.read_csv(ndw_csv)
     # Remove Zero Emission zones
     LEZ_location = LEZ_location[LEZ_location['zone_name'].str.startswith('ZE') == False].reset_index(drop=True)
     # Remove not used area from Amsterdam
