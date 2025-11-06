@@ -22,14 +22,8 @@ def get_cached_map_data(year, measurement, data_year):
     map_data = pd.DataFrame()
     map_data['RegioS'] = data_year['Province']
     
-    if measurement in data_year.columns:
-        values = data_year[measurement]
-        min_val = values.min()
-        max_val = values.max()
-        if not pd.isna(min_val) and not pd.isna(max_val) and max_val > min_val:
-            map_data['value'] = ((values - min_val) / (max_val - min_val)) * 100
-        else:
-            map_data['value'] = values
+    
+    map_data['value'] = values
     return map_data
 
 # ---------- PAGE CONFIG ----------
@@ -253,7 +247,7 @@ if not (measurement == "LEZ"):
 
 
 # ---------- LINE CHART ----------
-st.subheader("Average Yearly NO2 Value (Trend)")
+st.subheader(f"Average Yearly {measurement} Value for {province}")
 
 # Prepare series for the chosen measurement for the line chart
 year_col = next((c for c in series.columns if c.lower() == 'year'), 'Year')
@@ -262,14 +256,56 @@ if plot_y is None:
     # fallback: try 'value' column
     plot_y = 'value' if 'value' in series.columns else None
 
-fig = px.line(
-    series,
-    x=year_col,
-    y=plot_y,
-    title=f"Average Yearly {measurement} Value",
-    markers=True,
-    template="plotly_dark",
-) if plot_y is not None else None
+# Create the line chart with the data for the selected province
+fig = None
+if plot_y is not None:
+    # Filter data for the selected province and years >= 2019
+    province_data = series[
+        (series['Province'] == province) & 
+        (series[year_col] >= 2016)
+    ].copy()  # Create a copy to avoid SettingWithCopyWarning
+    
+    if not province_data.empty:
+        # Scale the values if they're outside a reasonable range
+        if plot_y in province_data.columns:
+            values = province_data[plot_y]
+            
+            # Define reasonable ranges for each measurement type
+            ranges = {
+                "NO2": (0, 70),    # Typical NO2 range in µg/m³
+                "PM2.5": (0, 70),   # Typical PM2.5 range in µg/m³
+                "PM10": (0, 70),   # Typical PM10 range in µg/m³
+            }
+
+            fig = px.line(
+                province_data,
+                x=year_col,
+                y=plot_y,
+                title=f"Average Yearly {measurement} Value for {province}",
+                markers=True,
+                template="plotly_dark",
+            )
+            
+            # Customize the layout
+            fig.update_layout(
+                yaxis_title=f"{measurement} Concentration (µg/m³)",
+                xaxis_title="Year",
+                yaxis=dict(
+                    gridcolor="#1a1a1a",
+                    range=[0, ranges.get(measurement, (0, 100))[1]]  # Set y-axis range
+                ),
+                xaxis=dict(
+                    gridcolor="#1a1a1a",
+                    dtick=1  # Show all years
+                )
+            )
+            
+            # Add hover data to show exact values
+            fig.update_traces(
+                hovertemplate=f"Year: %{{x}}<br>{measurement}: %{{y:.1f}} µg/m³<extra></extra>",
+                line=dict(width=3),  # Make the line thicker
+                marker=dict(size=8)  # Make the markers larger
+            )
 fig.update_layout(
     title_x=0.5,
     margin=dict(l=20, r=20, t=40, b=20),
