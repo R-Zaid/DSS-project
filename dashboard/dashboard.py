@@ -153,14 +153,8 @@ else:
             map_data['value'] = values  # Use original values without scaling
             print("DEBUG: Original values:", values)
             
-            # Only scale for visualization if needed
-            if values.min() < 0 or values.max() > 150:  # NO2 scale typically goes up to 150
-                min_val = values.min()
-                max_val = values.max()
-                if not pd.isna(min_val) and not pd.isna(max_val) and max_val > min_val:
-                    map_data['value'] = ((values - min_val) / (max_val - min_val)) * 150  # Scale to AQI range
-                else:
-                    map_data['value'] = values
+            # Use real values without scaling
+            map_data['value'] = values
             
             print("DEBUG: Value range:", map_data['value'].min(), "-", map_data['value'].max())
             print("DEBUG: Final map_data:")
@@ -170,10 +164,20 @@ else:
             map_key = f"{year}_{measurement}"
             folium_map = draw_no2_map(year, measurement, map_data)
             
-            if isinstance(folium_map, str):
-                components.html(folium_map, width=700, height=500, key=f"map_html_{map_key}")
-            else:
-                st_folium(folium_map, width=700, height=500, key=f"map_folium_{map_key}")
+            # Create a container for the map
+            map_container = st.container()
+            with map_container:
+                if isinstance(folium_map, str):
+                    components.html(folium_map, width=700, height=500, key=f"map_html_{map_key}")
+                else:
+                    st_folium(
+                        folium_map,
+                        width=700,
+                        height=500,
+                        key=f"map_folium_{map_key}",
+                        returned_objects=["last_active_drawing"],
+                        use_container_width=True
+                    )
         else:
             print(f"DEBUG: Measurement {measurement} not found in columns")
             st.warning(f"No data available for {measurement}")
@@ -233,7 +237,7 @@ if 'preloaded_data' not in st.session_state:
     st.session_state['preloaded_data'] = preload_all_measurements()
 
 # Display API data
-if not (measurement == "LEZ"):
+if measurement != "LEZ":
     try:
         # Use preloaded data if available, otherwise fetch it
         if measurement in st.session_state['preloaded_data']:

@@ -151,18 +151,42 @@ def attach_no2_mean(gdf: pd.DataFrame, meanprovince: pd.DataFrame) -> pd.DataFra
 
 
 def legenda(m, bins=AQI_NO2, title="Air Quality (NO2)", unit="µg/m³"):
+    """Add a legend to the map."""
+    legend_html = '''
+        {% macro html(this, kwargs) %}
+        <div id="maplegend" style="position: absolute; z-index:9999; background-color:white; color: black;
+             border-radius:6px; padding: 10px; font-size:12px; right: 10px; bottom: 20px;">
+        <div style="font-weight:600;margin-bottom:6px; color: black;">''' + title + '''</div>
+        '''
+        
     items = sorted(((lo, hi, lbl, col) for (lo, hi), (lbl, col) in bins.items()), key=lambda t: t[0])
-    rows = "".join(
-        f'<div style="display:flex;align-items:center;margin:4px 0">'
-        f'<span style="background:{col};width:12px;height:12px;border:1px solid #555;margin-right:8px"></span>'
-        f'<span style="font-size:12px">{lbl} '
-        f'<span style="color:#777">({int(lo)}–{("∞" if not math.isfinite(hi) else int(hi))} {unit})</span></span>'
-        f'</div>' for lo, hi, lbl, col in items
-    )
-    html = ('<div style="position:fixed;bottom:20px;left:20px;z-index:9999;background:#fff;'
-            'padding:8px 10px;border:1px solid #bbb;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.2)">'
-            f'<div style="font-weight:600;margin-bottom:6px">{title}</div>{rows}</div>')
-    macro = MacroElement(); macro._template = Template("{% macro html(this, kwargs) %}"+html+"{% endmacro %}")
+    
+    for lo, hi, lbl, col in items:
+        legend_html += f'''
+            <div style="display:flex;align-items:center;margin:3px 0">
+                <div style="background:{col};width:12px;height:12px;margin-right:8px;border:1px solid #555"></div>
+                <span style="color: black;">{lbl} ({int(lo)}–{("∞" if not math.isfinite(hi) else int(hi))} {unit})</span>
+            </div>
+        '''
+    
+    legend_html += '''
+        </div>
+        <style>
+        #maplegend {
+            opacity: 0.9;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+        #maplegend:hover {
+            opacity: 1;
+        }
+        </style>
+        {% endmacro %}
+    '''
+    
+    macro = MacroElement()
+    macro._name = 'maplegend'
+    macro._template = Template(legend_html)
     m.get_root().add_child(macro)
 
 def build_map(year, measure, data, gdf: pd.DataFrame, center_lat: float = 52.2, center_lon: float = 5.3) -> folium.Map:
@@ -241,6 +265,7 @@ def build_map(year, measure, data, gdf: pd.DataFrame, center_lat: float = 52.2, 
             ),
         ).add_to(m)
 
+    # Add layer control
     folium.LayerControl().add_to(m)
     return m
 
