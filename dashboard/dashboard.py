@@ -44,7 +44,7 @@ def load_series_data(measurement: str, province: str = None) -> pd.DataFrame:
         SELECT 
             "Year",
             "RegioS" as "Province",
-            "Average NO2 Value" as "NO₂",
+            "Average NO2 Value" as "NO2",
             "Average PM2.5 Value" as "PM2.5",
             "Average PM10 Value" as "PM10"
         FROM mean_yearlyvalues
@@ -61,7 +61,7 @@ def load_series_data(measurement: str, province: str = None) -> pd.DataFrame:
         print("DEBUG: Original columns:", df.columns.tolist())
         
         # Convert values to numeric
-        for col in ['NO₂', 'PM2.5', 'PM10']:
+        for col in ['NO2', 'PM2.5', 'PM10']:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
         
@@ -79,7 +79,7 @@ def load_series_data(measurement: str, province: str = None) -> pd.DataFrame:
     except Exception as e:
         print(f"Error loading data from database: {e}")
         # Return empty DataFrame with expected columns
-        return pd.DataFrame(columns=['Year', 'Province', 'NO₂', 'PM2.5', 'PM10'])
+        return pd.DataFrame(columns=['Year', 'Province', 'NO2', 'PM2.5', 'PM10'])
 
 
 def load_processed_data(year: int, measurement: str, province: str = None) -> pd.DataFrame:
@@ -108,7 +108,7 @@ st.sidebar.header("Controls")
 start_year = 1990
 end_year = 2030
 year = st.sidebar.slider("Select Year", start_year, end_year, 2024)
-measurement = st.sidebar.selectbox("Select Measurement", ["NO₂", "PM2.5", "PM10", "LEZ"])
+measurement = st.sidebar.selectbox("Select Measurement", ["NO2", "PM2.5", "PM10", "LEZ"])
 province = st.sidebar.selectbox("Select Province", [
                                                     "Brabant",
                                                     "Drenthe", 
@@ -193,7 +193,7 @@ else:
 col1, col2 = st.columns(2)
 with col1:
     # Determine column name used in data_year / series
-    measurement_map = {"NO2": "NO₂", "PM2.5": "PM2.5", "PM10": "PM10", "LEZ": "LEZ"}
+    measurement_map = {"NO2": "NO2", "PM2.5": "PM2.5", "PM10": "PM10", "LEZ": "LEZ"}
     mapped_measure = measurement_map.get(measurement, measurement)
 
     print(f"DEBUG: Looking for measurement '{mapped_measure}' in columns: {data_year.columns.tolist()}")
@@ -201,22 +201,13 @@ with col1:
     avg_value = None
     try:
         if mapped_measure in data_year.columns:
-            values = data_year[mapped_measure].dropna()  # Remove any NaN values
-            if not values.empty:
-                avg_value = values.mean()
-                print(f"DEBUG: Found values for {mapped_measure}: {values.tolist()}")
-                print(f"DEBUG: Calculated average: {avg_value}")
+            avg_value = data_year[mapped_measure].iloc[0]
         elif 'value' in data_year.columns:
-            values = data_year['value'].dropna()
-            if not values.empty:
-                avg_value = values.mean()
-                print(f"DEBUG: Found values in 'value' column: {values.tolist()}")
-                print(f"DEBUG: Calculated average: {avg_value}")
-    except Exception as e:
-        print(f"ERROR calculating average: {str(e)}")
+            avg_value = data_year['value'].mean()
+    except Exception:
         avg_value = None
 
-    if avg_value is not None and not pd.isna(avg_value):
+    if avg_value is not None:
         st.metric(f"Average {measurement} Value", f"{avg_value:.1f}")
     else:
         print("WARNING: No valid average value found")
@@ -228,14 +219,41 @@ with col2:
 
 
 #---------------- API CALLS ----------------
-# Only show NO2 measurements chart
-if measurement == "NO₂":  # Only show for NO2 measurements
-    bar_NO2_clean_html = draw_measures_chart()
-    st.components.v1.html(bar_NO2_clean_html, height=500)
+# Cache the API calls with a 1-hour refresh interval
+@st.cache_data(ttl=3600)  # Cache for 1 hour
+def get_cached_measures_chart(measurement: str) -> str:
+    """Cache the measures chart to prevent unnecessary API calls"""
+    return draw_measures_chart(measurement=measurement)
+
+# Preload data for all measurement types in the background
+@st.cache_data(ttl=3600)
+def preload_all_measurements():
+    """Preload data for all measurement types"""
+    return {
+        m: get_cached_measures_chart(m)
+        for m in ["NO2", "PM2.5", "PM10"]
+    }
+
+# Initialize the preloaded data in the background
+if 'preloaded_data' not in st.session_state:
+    st.session_state['preloaded_data'] = preload_all_measurements()
+
+# Display API data
+if not (measurement == "LEZ"):
+    try:
+        # Use preloaded data if available, otherwise fetch it
+        if measurement in st.session_state['preloaded_data']:
+            bar_NO2_clean_html = st.session_state['preloaded_data'][measurement]
+        else:
+            with st.spinner("Loading measures chart..."):
+                bar_NO2_clean_html = get_cached_measures_chart(measurement)
+        st.components.v1.html(bar_NO2_clean_html, height=500)
+    except Exception as e:
+        st.error(f"Error loading measures chart: {str(e)}")
 
 
 # ---------- LINE CHART ----------
-st.subheader("Average Yearly NO₂ Value (Trend)")
+st.subheader("Average Yearly NO2 Value (Trend)")
 
 # Prepare series for the chosen measurement for the line chart
 year_col = next((c for c in series.columns if c.lower() == 'year'), 'Year')

@@ -49,7 +49,7 @@ def load_geodata(geojson_path: str, json_path: str) -> gpd.GeoDataFrame:
     return gdf
 
 
-def get_no2_mean(year: int = 2025, measurement: str = "NO₂") -> pd.DataFrame:
+def get_no2_mean(year: int = 2025, measurement: str = "NO2") -> pd.DataFrame:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     csv_path = os.path.normpath(os.path.join(script_dir, "..", "..", "..", "data", "ProcessedData", "mean_yearlyvalues.csv"))
     
@@ -70,7 +70,7 @@ def get_no2_mean(year: int = 2025, measurement: str = "NO₂") -> pd.DataFrame:
         if 'value' not in df.columns:
             # Try to find the right column
             for col in df.columns:
-                if 'NO2' in col or 'NO₂' in col:
+                if 'NO2' in col or 'NO2' in col:
                     df['value'] = df[col]
                     break
         
@@ -150,7 +150,7 @@ def attach_no2_mean(gdf: pd.DataFrame, meanprovince: pd.DataFrame) -> pd.DataFra
 
 
 
-def legenda(m, bins=AQI_NO2, title="Air Quality (NO₂)", unit="µg/m³"):
+def legenda(m, bins=AQI_NO2, title="Air Quality (NO2)", unit="µg/m³"):
     items = sorted(((lo, hi, lbl, col) for (lo, hi), (lbl, col) in bins.items()), key=lambda t: t[0])
     rows = "".join(
         f'<div style="display:flex;align-items:center;margin:4px 0">'
@@ -191,8 +191,8 @@ def build_map(year, measure, data, gdf: pd.DataFrame, center_lat: float = 52.2, 
         if 'value' not in data.columns:
             if measure in data.columns:
                 data['value'] = data[measure]
-            elif 'NO₂' in data.columns:
-                data['value'] = data['NO₂']
+            elif 'NO2' in data.columns:
+                data['value'] = data['NO2']
                 
         # Create value dictionary
         for idx, row in data.iterrows():
@@ -237,14 +237,14 @@ def build_map(year, measure, data, gdf: pd.DataFrame, center_lat: float = 52.2, 
             },
             name=prov,
             tooltip=folium.Tooltip(
-                f"{prov}<br>NO₂ (mean): {mean_no2:.2f} µg/m³" if mean_no2 is not None else f"{prov}<br>NO₂: n.v.t."
+                f"{prov}<br>NO2 (mean): {mean_no2:.2f} µg/m³" if mean_no2 is not None else f"{prov}<br>NO2: n.v.t."
             ),
         ).add_to(m)
 
     folium.LayerControl().add_to(m)
     return m
 
-def draw_no2_map(year: int = 2025, measure: str = "NO₂", data: pd.DataFrame = None) -> folium.Map:
+def draw_no2_map(year: int = 2025, measure: str = "NO2", data: pd.DataFrame = None) -> folium.Map:
     print("DEBUG: Starting draw_no2_map with data:")
     if data is not None:
         print("Received data:")

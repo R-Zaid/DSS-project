@@ -29,7 +29,7 @@ else:
 
 # Add NO2 column copied from Average NO2 Value (if exists)
 src_col = None
-for candidate in ['Average NO2 Value', 'Average NO₂ Value', 'NO2', 'NO₂']:
+for candidate in ['Average NO2 Value', 'Average NO2 Value', 'NO2', 'NO2']:
     if candidate in df.columns:
         src_col = candidate
         break

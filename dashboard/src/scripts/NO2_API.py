@@ -29,15 +29,38 @@ def luchtmeetnet_api_fetch_data(data):
     if(data not in ['NO2', 'PM10', 'PM2.5']):
         raise ValueError("Invalid data type. Choose from 'NO2', 'PM10', or 'PM2.5'.")
     
-    # Build the URL for measurements data
-    url_measurements = f"https://api.luchtmeetnet.nl/open_api/measurements?formula={data}"
-    posts_luchtmeetnet_NO2 = requests.get(url_measurements).json()
+    # Convert PM2.5 to the correct API format if needed
+    api_formula = data.replace('.', '') if data == 'PM2.5' else data
     
-    dfposts_NO2 = pd.DataFrame(posts_luchtmeetnet_NO2["data"])[['formula',
-           'station_number',
-           'timestamp_measured',
-           'value']]
-           
+    # Build the URL for measurements data
+    url_measurements = f"https://api.luchtmeetnet.nl/open_api/measurements?formula={api_formula}"
+    response = requests.get(url_measurements)
+    posts_luchtmeetnet_NO2 = response.json()
+    
+    # First create DataFrame from the raw data
+    df_raw = pd.DataFrame(posts_luchtmeetnet_NO2.get("data", []))
+    
+    if df_raw.empty:
+        return pd.DataFrame(columns=['formula', 'station_number', 'timestamp_measured', 'value'])
+        
+    # Get the available columns
+    available_columns = df_raw.columns
+    required_columns = ['formula', 'station_number', 'timestamp_measured', 'value']
+    
+    # Check which columns are present
+    columns_to_select = [col for col in required_columns if col in available_columns]
+    
+    if not columns_to_select:
+        raise ValueError(f"None of the required columns {required_columns} found in API response. Available columns: {list(available_columns)}")
+    
+    # Select only available columns
+    dfposts_NO2 = df_raw[columns_to_select]
+    
+    # Ensure all required columns exist, add empty ones if missing
+    for col in required_columns:
+        if col not in dfposts_NO2.columns:
+            dfposts_NO2[col] = None
+            
     return dfposts_NO2
 
 
@@ -241,10 +264,9 @@ def get_data_from_api(measure):
     return dfposts
 
 
-def draw_measures_chart():
-    # Default to NO2 measurement
-    dfposts_NO2 = luchtmeetnet_api_fetch_data('NO2')
-    meanlocation_clean = clean_NO2_data(dfposts_NO2)
+def draw_measures_chart(measurement: str = 'NO2') -> str:
+    dfposts = luchtmeetnet_api_fetch_data(measurement)
+    meanlocation_clean = clean_NO2_data(dfposts)
     bar_NO2_clean_html = create_NO2_chart(meanlocation_clean)
     print("Measures chart created")
     return bar_NO2_clean_html
