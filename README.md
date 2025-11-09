@@ -10,9 +10,9 @@ Note: don't forget to first clone the repository
     git clone https://github.com/R-Zaid/DSS-project
     
 and go the the page in your browser
-http://localhost:8080
+http://localhost:8501
 
-Link to the Video: NA
+Link to the Video: can be found in the folder
 Link to the Codebase: 
 Dataset: 
 Other Links: NA
@@ -39,13 +39,13 @@ This deliverable contains the following folders:
     5. Requirements.txt - a lot of standard data frameworks. We have already imported streamlit as we want to use this in the future for clean UI design. We use earthpy, geopandas, folium and dash for creation of better diagrams. The version specification is needed as otherwise it creates an error. 
 
 2. mean_monthlyvalues.csv: contains the averaged monthly pollutant concentrations used as input data for the prediction models.
-    NO2_dataset.ipynb: Jupyter Notebook containing the preprocessing and prediction workflow for nitrogen dioxide (NO₂).
-    PM10_dataset.ipynb: notebook for processing and predicting particulate matter concentrations (PM10).
-    PM25_dataset.ipynb: notebook for processing and predicting fine particulate matter concentrations (PM2.5).
-    predicted_NO2values_yearly_2025_2031.csv: model output file with predicted yearly NO₂ values for 2025–2031.
-    predicted_PM10values_yearly_2025_2031.csv: model output file with predicted yearly PM10 values for 2025–2031.
-    predicted_PM25values_yearly_2025_2031.csv model output file with predicted yearly PM2.5 values for 2025–2031.
-    Prediction SARIMAX and LEZ LR.ipynb main notebook combining SARIMAX time series forecasting with Linear Regression adjustments to simulate the effects of Low Emission Zone (LEZ) implementation.
+    * NO2_dataset.ipynb: Jupyter Notebook containing the preprocessing and prediction workflow for nitrogen dioxide (NO₂).
+    * PM10_dataset.ipynb: notebook for processing and predicting particulate matter concentrations (PM10).
+    * PM25_dataset.ipynb: notebook for processing and predicting fine particulate matter concentrations (PM2.5).
+    * predicted_NO2values_yearly_2025_2031.csv: model output file with predicted yearly NO₂ values for 2025–2031.
+    * predicted_PM10values_yearly_2025_2031.csv: model output file with predicted yearly PM10 values for 2025–2031.
+    * predicted_PM25values_yearly_2025_2031.csv model output file with predicted yearly PM2.5 values for 2025–2031.
+    * Prediction SARIMAX and LEZ LR.ipynb main notebook combining SARIMAX time series forecasting with Linear Regression adjustments to simulate the effects of Low Emission Zone (LEZ) implementation.
 
 
 3. Preprocessors - Contains all the preprocessed data explaining and showing how the data is collected and prepared:
