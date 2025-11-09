@@ -1,0 +1,6 @@
+pandas
+streamlit
+folium
+geopandas
+SQLAlchemy
+psycopg2-binary

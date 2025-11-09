@@ -45,15 +45,16 @@ services:
             - POSTGRES_USER=student
             - POSTGRES_PASSWORD=infomdss
             - POSTGRES_DB=dashboard
+            - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - db_dashboard-data:/var/lib/postgresql/data/
+            - db_dashboard-data:/var/lib/postgresql/data
         container_name: dss_group1_project
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U student -d dashboard -h localhost"]
-            interval: 30s
-            timeout: 10s
+            interval: 5s
+            timeout: 5s
             retries: 5
-            start_period: 30s
+            start_period: 10s
 
 volumes:
     db_dashboard-data:

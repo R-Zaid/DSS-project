@@ -2,14 +2,30 @@ import numpy as np
 import pandas as pd
 import requests
 import plotly.express as px
-
-
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Everything is done at runtime, we should preprocess !!!!!!!!!!!!!!!!!
+import plotly.graph_objects as go
 
 url_province = "https://api.luchtmeetnet.nl/open_api/stations"
 
 pv = ['Groningen', 'Friesland', 'Drenthe', 'Overijssel', 'Gelderland', 'Flevoland',
       'Utrecht', 'Noord-Holland', 'Zuid-Holland', 'Noord-Brabant', 'Limburg', 'Zeeland' ]
+
+def draw_NO2_chart(data):
+    """Draw a line chart of NO2 values over time"""
+    fig = px.line(data, x='timestamp_measured', y='value', title='NO2 Measurements Over Time')
+    return fig.to_html(full_html=False)
+
+def draw_NO2_province_chart(data):
+    """Draw a bar chart of NO2 values by province"""
+    avg_by_province = data.groupby('province')['value'].mean().reset_index()
+    fig = px.bar(avg_by_province, x='province', y='value', title='Average NO2 by Province')
+    return fig.to_html(full_html=False)
+
+def draw_measures_chart(data):
+    """Draw a chart showing various NO2 measurement statistics"""
+    fig = go.Figure()
+    fig.add_trace(go.Box(y=data['value'], name='NO2 Measurements'))
+    fig.update_layout(title='NO2 Measurement Statistics')
+    return fig.to_html(full_html=False)
 
 # =======================================================================================
 # ---------------------------------------------------------------------------------------

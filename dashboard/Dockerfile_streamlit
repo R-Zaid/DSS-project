@@ -4,29 +4,27 @@ FROM python:3.8
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy only requirements first to leverage Docker layer caching
+# Copy requirements and install script
 COPY ./dashboard/requirements.txt /app/requirements.txt
 
-# Install OS-level dependencies required by geospatial Python packages
-# (GDAL/PROJ/GEOS and build tools). This helps pip install fiona, geopandas, etc.
+# Install OS-level dependencies and configure pip
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
-	   build-essential \
-	   gcc \
-	   gdal-bin \
-	   libgdal-dev \
-	   proj-bin \
-	   libproj-dev \
-	   libgeos-dev \
-	   libspatialindex-dev \
-	   libsqlite3-dev \
-	   libxml2-dev \
-	   libpq-dev \
-	   ca-certificates \
-	&& rm -rf /var/lib/apt/lists/* \
-	# Upgrade pip and install Python dependencies (includes streamlit)
-	&& pip install --upgrade pip \
-	&& pip install --no-cache-dir -r /app/requirements.txt
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+       gcc \
+       gdal-bin \
+       libgdal-dev \
+       proj-bin \
+       libproj-dev \
+       libgeos-dev \
+       libspatialindex-dev \
+       libsqlite3-dev \
+       libxml2-dev \
+       libpq-dev \
+       ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --upgrade pip \
+    && pip install setuptools wheel
 
 # Copy the rest of the dashboard code
 COPY ./dashboard /app
@@ -37,6 +35,17 @@ EXPOSE 8501
 # Define the streamlit app file (kept for clarity)
 ENV STREAMLIT_APP=dashboard.py
 
-# Run the Streamlit app. Use explicit filename and server flags so
-# we don't rely on a shell or PATH lookup that may differ across images.
-CMD ["streamlit", "run", "dashboard.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+# Install packages with retries
+RUN for i in 1 2 3 4 5; do \
+        pip install --no-cache-dir -r requirements.txt && break || sleep 15; \
+    done
+
+# Copy and setup the startup script
+COPY ./dashboard/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Copy the data loading script
+COPY ./scripts/load_yearly_averages.py /app/load_yearly_averages.py
+
+# Use the startup script as the entry point
+CMD ["/app/start.sh"]
