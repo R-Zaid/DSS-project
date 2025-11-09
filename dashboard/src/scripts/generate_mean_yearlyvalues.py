@@ -70,8 +70,8 @@ def generate_yearly_mean(input_csv: str, output_csv: str) -> None:
     for c in avg_cols:
         df[c] = pd.to_numeric(df[c], errors="coerce")
 
-    # Group by Year and Province and compute mean of avg_cols
-    grouped = df.groupby(["Year", "Province"])[avg_cols].mean().reset_index()
+    # Group by Year and RegioS and compute mean of avg_cols
+    grouped = df.groupby(["Year", "RegioS"])[avg_cols].mean().reset_index()
 
     # Save to CSV
     grouped.to_csv(output_csv, index=False)

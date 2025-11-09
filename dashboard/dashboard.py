@@ -36,12 +36,12 @@ def load_series_data(measurement: str, province: str = None) -> pd.DataFrame:
         # Query data from the database
         query = """
         SELECT 
-            "Year",
+            CAST("Year" as INTEGER) as "Year",
             "RegioS" as "Province",
             "Average NO2 Value" as "NO2",
             "Average PM2.5 Value" as "PM2.5",
             "Average PM10 Value" as "PM10"
-        FROM mean_yearlyvalues
+        FROM yearly_averages
         WHERE "Average NO2 Value" IS NOT NULL 
         OR "Average PM2.5 Value" IS NOT NULL 
         OR "Average PM10 Value" IS NOT NULL
