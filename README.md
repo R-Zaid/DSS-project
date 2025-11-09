@@ -84,6 +84,9 @@ This deliverable contains the following folders:
     3. Visalisation NO2 value for each province, calculated from hourly API data by mapping  provinces and average NO2 This is colored according to the European Air Quality Index (AQI) scale, from green (“Good”) to purple (“Extremely Poor”).
        * CSF: Air pollution rates NO2, PM₂.₅, PM₁₀, (µg/m³) per province
        * KPI: Hourly API data ensures accurate national air quality updates and displays the AQI scale in a clear, color-coded format.
+   4. Visualization of the line chart showing the impact of different scaling levels of the area km2 on the predicted value of the pollutant
+       * CSF: Predicted emissions per region in 2030 scenarios of low emission zones
+       * KPI: Model in which a visible prediction of future emission that reflect LEZ policy implementation of AQI. 
 
 5. The repo also contains the powerpoint presentation.
 
