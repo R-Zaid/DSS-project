@@ -187,32 +187,122 @@ else:
         st.write("Data available:", data_year.columns.tolist())
 
 
-# ---------- METRICS ----------
-col1, col2 = st.columns(2)
-with col1:
-    # Determine column name used in data_year / series
-    measurement_map = {"NO2": "NO2", "PM2.5": "PM2.5", "PM10": "PM10", "LEZ": "LEZ"}
-    mapped_measure = measurement_map.get(measurement, measurement)
 
-    print(f"DEBUG: Looking for measurement '{mapped_measure}' in columns: {data_year.columns.tolist()}")
-    
-    avg_value = None
-    try:
-        if mapped_measure in data_year.columns:
-            avg_value = data_year[mapped_measure].iloc[0]
-        elif 'value' in data_year.columns:
-            avg_value = data_year['value'].mean()
-    except Exception:
-        avg_value = None
 
-    if avg_value is not None:
-        st.metric(f"Average {measurement} Value", f"{avg_value:.1f}")
+
+
+
+
+# ---------- LINE CHART ----------
+# Create forecast plot using the selected measurement
+if measurement != "LEZ":
+    # Add multi-select for provinces in line chart
+    selected_provinces = st.multiselect(
+        "Select Provinces to Compare",
+        options=[
+            "Brabant", "Drenthe", "Flevoland", "Friesland", 
+            "Groningen", "Gelderland", "Limburg", "Noord-Holland",
+            "Overijssel", "Utrecht", "Zeeland", "Zuid-Holland"
+        ],
+        default=[province]  # Default to the province selected in sidebar
+    )
+
+    st.subheader(f"Average Yearly {measurement} Values Comparison")
+
+    # Prepare series for the chosen measurement for the line chart
+    year_col = next((c for c in series.columns if c.lower() == 'year'), 'Year')
+    # Map the measurement to the corresponding column name
+    mapped_measure = measurement  # Since our columns are already named NO2, PM2.5, PM10
+    plot_y = mapped_measure if mapped_measure in series.columns else next((c for c in series.columns if measurement.lower().replace('₂','2') in c.lower().replace('₂','2')), None)
+    if plot_y is None:
+        # fallback: try 'value' column
+        plot_y = 'value' if 'value' in series.columns else None
+
+    # Create the line chart with the data for the selected provinces
+    fig = None
+    if plot_y is not None:
+        # Filter data for the selected provinces and years >= 2016
+        province_data = series[
+            (series['Province'].isin(selected_provinces)) & 
+            (series[year_col] >= 2016)
+        ].copy()  # Create a copy to avoid SettingWithCopyWarning
+        
+        if not province_data.empty:
+            # Scale the values if they're outside a reasonable range
+            if plot_y in province_data.columns:
+                values = province_data[plot_y]
+                
+                # Define reasonable ranges for each measurement type
+                ranges = {
+                    "NO2": (0, 70),    # Typical NO2 range in µg/m³
+                    "PM2.5": (0, 70),   # Typical PM2.5 range in µg/m³
+                    "PM10": (0, 70),   # Typical PM10 range in µg/m³
+                }
+
+                fig = px.line(
+                    province_data,
+                    x=year_col,
+                    y=plot_y,
+                    color='Province',  # Color lines by province
+                    title=f"Average Yearly {measurement} Values Comparison",
+                    markers=True,
+                    template="plotly_dark",
+                )
+                
+                # Customize the layout
+                fig.update_layout(
+                    yaxis_title=f"{measurement} Concentration (µg/m³)",
+                    xaxis_title="Year",
+                    yaxis=dict(
+                        gridcolor="#1a1a1a",
+                        range=[0, ranges.get(measurement, (0, 100))[1]]  # Set y-axis range
+                    ),
+                    xaxis=dict(
+                        gridcolor="#1a1a1a",
+                        dtick=1  # Show all years
+                    )
+                )
+                
+                # Add hover data to show exact values
+                fig.update_traces(
+                    hovertemplate=f"Year: %{{x}}<br>{measurement}: %{{y:.1f}} µg/m³<extra></extra>",
+                    line=dict(width=3),  # Make the line thicker
+                    marker=dict(size=8)  # Make the markers larger
+                )
+    fig.update_layout(
+        title_x=0.5,
+        margin=dict(l=20, r=20, t=40, b=20),
+        plot_bgcolor="#0b132b",
+        paper_bgcolor="#0b132b",
+    )
+    if fig is not None:
+        st.plotly_chart(fig, use_container_width=True)
     else:
-        print("WARNING: No valid average value found")
-        st.metric(f"Average {measurement} Value", "n.v.t.")
+        st.info("No time-series data available for the selected measurement.")
 
-with col2:
-    st.metric("Prediction Index", "4.93%", delta="-0.12%")
+# ---------- FORECAST PLOT ----------
+
+try:
+    # Create forecast plot using the selected measurement
+    if measurement != "LEZ":
+        st.subheader("SARIMAX Forecast with Scaling Factors")
+        forecast_plot = create_forecast_plot(measurement)
+        
+        # Display the plot with additional explanation
+        st.plotly_chart(forecast_plot, use_container_width=True)
+        
+        # Add explanation of scaling factors
+        st.markdown("""
+        **Scaling factors:**
+        - Blue (1.0): Base scenario
+        - Orange (1.25): Moderate improvement scenario
+        - Green (1.5): Optimistic scenario
+        - Red (1.75): Aggressive improvement scenario
+        """)
+    else:
+        st.info("Forecast visualization is not available for LEZ selection.")
+except Exception as e:
+    st.error(f"Error generating forecast plot: {e}")
 
 
 
@@ -248,99 +338,3 @@ if measurement != "LEZ":
         st.components.v1.html(bar_NO2_clean_html, height=500)
     except Exception as e:
         st.error(f"Error loading measures chart: {str(e)}")
-
-
-# ---------- LINE CHART ----------
-st.subheader(f"Average Yearly {measurement} Value for {province}")
-
-# Prepare series for the chosen measurement for the line chart
-year_col = next((c for c in series.columns if c.lower() == 'year'), 'Year')
-plot_y = mapped_measure if mapped_measure in series.columns else next((c for c in series.columns if measurement.lower().replace('₂','2') in c.lower().replace('₂','2')), None)
-if plot_y is None:
-    # fallback: try 'value' column
-    plot_y = 'value' if 'value' in series.columns else None
-
-# Create the line chart with the data for the selected province
-fig = None
-if plot_y is not None:
-    # Filter data for the selected province and years >= 2019
-    province_data = series[
-        (series['Province'] == province) & 
-        (series[year_col] >= 2016)
-    ].copy()  # Create a copy to avoid SettingWithCopyWarning
-    
-    if not province_data.empty:
-        # Scale the values if they're outside a reasonable range
-        if plot_y in province_data.columns:
-            values = province_data[plot_y]
-            
-            # Define reasonable ranges for each measurement type
-            ranges = {
-                "NO2": (0, 70),    # Typical NO2 range in µg/m³
-                "PM2.5": (0, 70),   # Typical PM2.5 range in µg/m³
-                "PM10": (0, 70),   # Typical PM10 range in µg/m³
-            }
-
-            fig = px.line(
-                province_data,
-                x=year_col,
-                y=plot_y,
-                title=f"Average Yearly {measurement} Value for {province}",
-                markers=True,
-                template="plotly_dark",
-            )
-            
-            # Customize the layout
-            fig.update_layout(
-                yaxis_title=f"{measurement} Concentration (µg/m³)",
-                xaxis_title="Year",
-                yaxis=dict(
-                    gridcolor="#1a1a1a",
-                    range=[0, ranges.get(measurement, (0, 100))[1]]  # Set y-axis range
-                ),
-                xaxis=dict(
-                    gridcolor="#1a1a1a",
-                    dtick=1  # Show all years
-                )
-            )
-            
-            # Add hover data to show exact values
-            fig.update_traces(
-                hovertemplate=f"Year: %{{x}}<br>{measurement}: %{{y:.1f}} µg/m³<extra></extra>",
-                line=dict(width=3),  # Make the line thicker
-                marker=dict(size=8)  # Make the markers larger
-            )
-fig.update_layout(
-    title_x=0.5,
-    margin=dict(l=20, r=20, t=40, b=20),
-    plot_bgcolor="#0b132b",
-    paper_bgcolor="#0b132b",
-)
-if fig is not None:
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.info("No time-series data available for the selected measurement.")
-
-# ---------- FORECAST PLOT ----------
-st.subheader("SARIMAX Forecast with Scaling Factors")
-
-try:
-    # Create forecast plot using the selected measurement
-    if measurement != "LEZ":
-        forecast_plot = create_forecast_plot(measurement)
-        
-        # Display the plot with additional explanation
-        st.plotly_chart(forecast_plot, use_container_width=True)
-        
-        # Add explanation of scaling factors
-        st.markdown("""
-        **Scaling factors:**
-        - Blue (1.0): Base scenario
-        - Orange (1.25): Moderate improvement scenario
-        - Green (1.5): Optimistic scenario
-        - Red (1.75): Aggressive improvement scenario
-        """)
-    else:
-        st.info("Forecast visualization is not available for LEZ selection.")
-except Exception as e:
-    st.error(f"Error generating forecast plot: {e}")

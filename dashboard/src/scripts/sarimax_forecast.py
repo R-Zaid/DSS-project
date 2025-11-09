@@ -2,8 +2,16 @@ import pandas as pd
 import plotly.graph_objects as go
 from io import StringIO
 
-# Your data as a string
+# Values from the sarimax model output
 data_str = """Year,PM10,PM25,NO2,Scaling
+2016,18.180556,10.712963,19.472222,1.0
+2017,18.208333,10.814815,18.805556,1.0
+2018,19.583333,11.731481,18.291667,1.0
+2019,17.958333,10.231481,17.229167,1.0
+2020,16.027778,8.657407,14.201389,1.0
+2021,15.958333,9.185185,13.916667,1.0
+2022,16.750000,9.000000,13.930556,1.0
+2023,15.062500,7.740741,11.708333,1.0
 2024,15.10135196,8.19545943,11.48389581,1.0
 2025,14.69828583,7.88148613,10.55002896,1.0
 2026,14.29521969,7.56751282,9.6161621,1.0
@@ -39,13 +47,10 @@ def create_forecast_plot(measurement='ALL'):
     Args:
         measurement (str): 'NO2', 'PM2.5', 'PM10', or 'ALL' to show all pollutants
     """
-    # Convert string data to DataFrame
     df = pd.read_csv(StringIO(data_str))
 
-    # Create the figure
     fig = go.Figure()
 
-    # Color schemes for different scaling factors
     colors = {
         1.0: '#1f77b4',    # blue
         1.25: '#ff7f0e',   # orange
@@ -53,20 +58,17 @@ def create_forecast_plot(measurement='ALL'):
         1.75: '#d62728'    # red
     }
 
-    # Map measurement names to DataFrame columns
     measure_map = {
         'NO2': 'NO2',
         'PM2.5': 'PM25',
         'PM10': 'PM10'
     }
 
-    # Determine which measurements to plot
     if measurement == 'ALL':
         measurements_to_plot = list(measure_map.keys())
     else:
         measurements_to_plot = [measurement]
 
-    # Add traces for each scaling factor
     for scaling in df['Scaling'].unique():
         df_scale = df[df['Scaling'] == scaling]
         
@@ -81,7 +83,7 @@ def create_forecast_plot(measurement='ALL'):
             ))
 
     # Update layout
-    title = 'Air Quality Predictions with Different Scaling Factors (2024-2030)' if measurement == 'ALL' else f'{measurement} Predictions with Different Scaling Factors (2024-2030)'
+    title = 'Air Quality Predictions with Different Scaling Factors (2016-2030)' if measurement == 'ALL' else f'{measurement} Predictions with Different Scaling Factors (2016-2030)'
     
     fig.update_layout(
         title=title,
