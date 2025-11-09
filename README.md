@@ -38,8 +38,17 @@ This deliverable contains the following folders:
     4. dockerfile_dashboard - contains the docker for the dashboard. Looks a lot like the one from the example code.
     5. Requirements.txt - a lot of standard data frameworks. We have already imported streamlit as we want to use this in the future for clean UI design. We use earthpy, geopandas, folium and dash for creation of better diagrams. The version specification is needed as otherwise it creates an error. 
 
+2. mean_monthlyvalues.csv: contains the averaged monthly pollutant concentrations used as input data for the prediction models.
+    NO2_dataset.ipynb: Jupyter Notebook containing the preprocessing and prediction workflow for nitrogen dioxide (NO₂).
+    PM10_dataset.ipynb: notebook for processing and predicting particulate matter concentrations (PM10).
+    PM25_dataset.ipynb: notebook for processing and predicting fine particulate matter concentrations (PM2.5).
+    predicted_NO2values_yearly_2025_2031.csv: model output file with predicted yearly NO₂ values for 2025–2031.
+    predicted_PM10values_yearly_2025_2031.csv: model output file with predicted yearly PM10 values for 2025–2031.
+    predicted_PM25values_yearly_2025_2031.csv model output file with predicted yearly PM2.5 values for 2025–2031.
+    Prediction SARIMAX and LEZ LR.ipynb main notebook combining SARIMAX time series forecasting with Linear Regression adjustments to simulate the effects of Low Emission Zone (LEZ) implementation.
 
-2. Preprocessors - Contains all the preprocessed data explaining and showing how the data is collected and prepared:
+
+3. Preprocessors - Contains all the preprocessed data explaining and showing how the data is collected and prepared:
     
     1.  DSS group 1 merge.jpynb - In this file we analyzed, transformed and preprocessed the api data from the following 4 APIs:
         * Vehicle api: "https://opendata.cbs.nl/ODataApi/odata/85235NED/TypedDataSet"
@@ -65,7 +74,7 @@ This deliverable contains the following folders:
             'https://data.rivm.nl/data/luchtmeetnet/Vastgesteld-jaar/2024/'
 
 
-3. Existing Indicators and Visualizations:
+4. Existing Indicators and Visualizations:
     1. Vis NO2.jpynb: visualization of historical values of NO2 form 2016 to 2024
        * CSF: Predict emissions per region in 2030 scenarios of low emission zones
        * KPI: Line chart visualizes NO2, PM₂.₅, and PM₁₀ emission trends over time to support scenario analysis.
@@ -76,6 +85,7 @@ This deliverable contains the following folders:
        * CSF: Air pollution rates NO2, PM₂.₅, PM₁₀, (µg/m³) per province
        * KPI: Hourly API data ensures accurate national air quality updates and displays the AQI scale in a clear, color-coded format.
 
+5. The repo also contains the powerpoint presentation.
 
 Data sources:
     
