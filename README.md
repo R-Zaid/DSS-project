@@ -1,16 +1,28 @@
 Team 01 - Dashboard for the evaluation of the effect of low emission zones 
 
-Running the app:
-To run the program go to the current folder and use the command
-    
-    docker-compose up -d
+For the Deployment of our program we run a docker compose file that consists of three endpoints. - -The first endpoint is a postgres database hosted on 5432, set up just like the one in the example code snippit. The second endpoint is our old code from the midterm report, it uses flask to run an html folder structure. This endpoint is outdated and should not be considered in the final exam. However, we chose not to delete it as it is a nice way of showing the difference between the midterm and the final product. The last endpoint is our final product, the streamlit-app. It is hosted on port: 8501, which is a standard streamlit endpoint.  
+
+ 
+
+By having docker open and running the command: docker-compose up –d streamlit-app, you start our application and can begin to see the projectIf this does not work immidiately you can change  
+
+db_dashboard-data:/var/lib/postgresql 
+
+Into 
+
+ db_dashboard-data:/var/lib/postgresql/data/ 
+
+ If the map is empty run this command: docker-compose exec streamlit-app python /app/load_yearly_averages.py. 
+ This fills the database. However it should already be working. This is just a failsave. 
+
+ 
     
 Note: don't forget to first clone the repository 
     
     git clone https://github.com/R-Zaid/DSS-project
     
 and go the the page in your browser
-http://localhost:8080
+http://localhost:8501
 
 Link to the Video: NA
 Link to the Codebase: 
@@ -19,22 +31,7 @@ Other Links: NA
 
 This deliverable contains the following folders:
 1. Dashboard - 
-    1. preprocessors -
-        1. CBSPreprocessor.ipynb -
-        2. georef-netherlands-provincie.geojson -
-        3. georef-netherlands-provincie.geojson -
-    2. src -
-        1. html -
-            * dashboard.html - the html file for the most important graphic that we have, the no2 map.
-            * index.html - a home page for the data that we have gathered.
-        2. scripts -
-            * LEZ_map - creates the map for the emission zone locations.
-            * NO2 api - creates the mean NO2 and mean NO2 per province. Has already preparations for the other two substances we are going to display. 
-            * NO2_map - creates the map for the NO2 means in the dashboard.html. For now has mock data, but this will change in the final project.
-            * NO2_past_value - uses parts of our databank to display the mean values of that year. 
-        3. style - contains style our css file for the website
-    
-    3. app.py - This file creates the backend of our website using flask. We have diverted from the standard flask layout as the standard express layout is more logical. 
+    dashboard.py - our streamlit app that runs everything. And is the only actual important file in the dashboard part except for the data. 
     4. dockerfile_dashboard - contains the docker for the dashboard. Looks a lot like the one from the example code.
     5. Requirements.txt - a lot of standard data frameworks. We have already imported streamlit as we want to use this in the future for clean UI design. We use earthpy, geopandas, folium and dash for creation of better diagrams. The version specification is needed as otherwise it creates an error. 
 

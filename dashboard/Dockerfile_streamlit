@@ -21,13 +21,20 @@ RUN apt-get update \
        libsqlite3-dev \
        libxml2-dev \
        libpq-dev \
+       postgresql-client \
        ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --upgrade pip \
     && pip install setuptools wheel
 
-# Copy the rest of the dashboard code
+# Install Python dependencies with retry mechanism
+RUN for i in 1 2 3 4 5; do \
+        pip install --no-cache-dir -r requirements.txt && break || sleep 15; \
+    done
+
+# Copy the dashboard code and data
 COPY ./dashboard /app
+COPY ./data /app/data
 
 # Streamlit default port is 8501; expose that and match docker-compose
 EXPOSE 8501
