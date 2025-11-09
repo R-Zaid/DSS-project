@@ -322,17 +322,25 @@ else:
     st.info("No time-series data available for the selected measurement.")
 
 # ---------- FORECAST PLOT ----------
-st.subheader("SARIMAX Forecast")
+st.subheader("SARIMAX Forecast with Scaling Factors")
 
 try:
-    # Load SARIMAX forecast data from CSV
-    csv_path = "../data/PredictedData/predicted_values_2025_2030.csv"  # Updated path to correct location
-    forecast_data = pd.read_csv(csv_path)
-
-    # Generate forecast plot
-    forecast_plot = create_forecast_plot(forecast_data, measurement, province)
-
-    # Display the plot
-    st.plotly_chart(forecast_plot)
+    # Create forecast plot using the selected measurement
+    if measurement != "LEZ":
+        forecast_plot = create_forecast_plot(measurement)
+        
+        # Display the plot with additional explanation
+        st.plotly_chart(forecast_plot, use_container_width=True)
+        
+        # Add explanation of scaling factors
+        st.markdown("""
+        **Scaling factors:**
+        - Blue (1.0): Base scenario
+        - Orange (1.25): Moderate improvement scenario
+        - Green (1.5): Optimistic scenario
+        - Red (1.75): Aggressive improvement scenario
+        """)
+    else:
+        st.info("Forecast visualization is not available for LEZ selection.")
 except Exception as e:
     st.error(f"Error generating forecast plot: {e}")
