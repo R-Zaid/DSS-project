@@ -40,8 +40,7 @@ def create_forecast_plot(df, pollutant_type, region=None):
         raise ValueError(f"Invalid pollutant type: {pollutant_type}")
     
     title = f"Predicted {pollutant_type} Values (2025-2030)"
-    if region:
-        title += f" for {region}"
+
     
     import plotly.graph_objects as go
     import numpy as np

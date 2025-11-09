@@ -10,7 +10,7 @@ from src.scripts.LEZ_map_new import draw_LEZ_map_new
 from src.scripts.NO2_API import draw_measures_chart
 import streamlit.components.v1 as components
 from sqlalchemy import create_engine
-import os
+from src.scripts.sarimax_forecast import create_forecast_plot
 
 # Create database connection
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://student:infomdss@db_dashboard:5432/dashboard')
@@ -320,3 +320,19 @@ if fig is not None:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.info("No time-series data available for the selected measurement.")
+
+# ---------- FORECAST PLOT ----------
+st.subheader("SARIMAX Forecast")
+
+try:
+    # Load SARIMAX forecast data from CSV
+    csv_path = "../data/PredictedData/predicted_values_2025_2030.csv"  # Updated path to correct location
+    forecast_data = pd.read_csv(csv_path)
+
+    # Generate forecast plot
+    forecast_plot = create_forecast_plot(forecast_data, measurement, province)
+
+    # Display the plot
+    st.plotly_chart(forecast_plot)
+except Exception as e:
+    st.error(f"Error generating forecast plot: {e}")
