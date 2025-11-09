@@ -285,7 +285,7 @@ if measurement != "LEZ":
 try:
     # Create forecast plot using the selected measurement
     if measurement != "LEZ":
-        st.subheader("SARIMAX Forecast with Scaling Factors")
+        st.subheader("Forecast with Scaling Factors")
         forecast_plot = create_forecast_plot(measurement)
         
         # Display the plot with additional explanation
@@ -293,11 +293,8 @@ try:
         
         # Add explanation of scaling factors
         st.markdown("""
-        **Scaling factors:**
-        - Blue (1.0): Base scenario
-        - Orange (1.25): Moderate improvement scenario
-        - Green (1.5): Optimistic scenario
-        - Red (1.75): Aggressive improvement scenario
+       Explanation: This forecast visualizes different scenarios based on scaling the size of the total low emission zone area. 
+                    It shows the effect of scaling factors on the projected air quality levels. 
         """)
     else:
         st.info("Forecast visualization is not available for LEZ selection.")
@@ -307,6 +304,8 @@ except Exception as e:
 
 
 #---------------- API CALLS ----------------
+st.subheader("Live API Data (updated hourly)")
+
 # Cache the API calls with a 1-hour refresh interval
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_cached_measures_chart(measurement: str) -> str:
